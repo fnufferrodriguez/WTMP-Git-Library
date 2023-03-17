@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Used to execute raw Git CLI Commands
@@ -60,7 +61,15 @@ public final class GitCLI {
      */
     public static boolean isGitExectuable() {
         try {
-            return git(Paths.get(""), "--help").getExitCode() == 0;
+            CLIOutput gitOutput = git(Paths.get(""), "--version");
+            if(gitOutput.getExitCode() == 0) {
+                LOGGER.atInfo().atMostEvery(1, TimeUnit.DAYS).log("Git Version: %s", gitOutput.getStdOut());
+                return true;
+            } else {
+                LOGGER.atInfo().log("git --version failed. exit code: %s, stdout: %s, stderr: %s",
+                        gitOutput.getExitCode(), gitOutput.getStdOut(), gitOutput.getStdErr());
+                return false;
+            }
         } catch (InterruptedException | IOException e) {
             LOGGER.atWarning().withCause(e).log();
             return false;

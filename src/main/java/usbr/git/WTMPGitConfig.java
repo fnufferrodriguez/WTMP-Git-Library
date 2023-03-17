@@ -54,7 +54,7 @@ public class WTMPGitConfig {
     }
 
     public GitProperty getDoNotSetSChannelProperty() {
-        String key = "wtmp.ignoreSChannel";
+        String key = WTMPGitProperties.IGNORE_SCHANNEL;
         String val = "true";
 
         return new GitProperty(key, val);

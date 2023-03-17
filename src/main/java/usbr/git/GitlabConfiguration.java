@@ -84,7 +84,7 @@ public class GitlabConfiguration {
     }
 
     public GitProperty getIgnoreProperty() {
-        String propertyName = "wtmp."+getUrl().toString() + ".ignore";
+        String propertyName = WTMPGitProperties.getWtmpIgnoreUrlProperty(getUrl());
         String propertyValue = "true";
 
         return new GitProperty(propertyName, propertyValue);

@@ -38,8 +38,8 @@ public class GitlabConfigurator {
             throw new GitCLIUnavailableException("Git CLI Tools unavailable or not in PATH!");
         }
         LOGGER.atConfig().log("Git CLI Present");
-        Map<String, String> gitConfig = GitConfig.listGitConfig();
-        LOGGER.atConfig().log("Git Config: %s", gitConfig);
+
+        Map<String, String> gitConfig = retrieveMaybeInitializeGitConfig();
 
         if(!mapContainsProperty(gitConfig, _configuration.getDoNotSetSChannelProperty())) {
             LOGGER.atConfig().log("Setting sslbackend property");
@@ -59,6 +59,32 @@ public class GitlabConfigurator {
                 LOGGER.atInfo().log("Skipping autoconfiguration for Gitlab instance: %s", gitlabConfig.getUrl());
             }
         }
+    }
+
+    /**
+     * This will retrieve the Global git config for the system as a map.
+     * If the config comes back as blank (typically the case on a brand new Git install),
+     * it will set WTMPGITProperties.IGNORE_SCHANNEL to 'false' in the global config.
+     *
+     * If that fails, it will log a message since we may be unable to modify the Git global config for some reason.
+     *
+     * @return A map of the system git properties (typically, but not always, containing at least one element)
+     */
+    private Map<String, String> retrieveMaybeInitializeGitConfig() throws IOException, InterruptedException {
+        Map<String, String> gitConfig = GitConfig.listGlobalGitConfig();
+        LOGGER.atConfig().log("Git Config: %s", gitConfig);
+
+        if(!gitConfig.containsKey(WTMPGitProperties.IGNORE_SCHANNEL.toLowerCase())) {
+            LOGGER.atConfig().log("Setting %s to default false", WTMPGitProperties.IGNORE_SCHANNEL);
+            ensurePropertySet(gitConfig, new GitProperty(WTMPGitProperties.IGNORE_SCHANNEL, "false"));
+            gitConfig = GitConfig.listGlobalGitConfig();
+            LOGGER.atConfig().log("Updated Git Config: %s", gitConfig);
+        }
+
+        if(!gitConfig.containsKey(WTMPGitProperties.IGNORE_SCHANNEL.toLowerCase())) {
+            LOGGER.atWarning().log("Failed to update git global config! Git autoconfiguration may not work. Trying to continue.");
+        }
+        return gitConfig;
     }
 
     private void ensurePropertySet(Map<String, String> gitGlobalConfig, GitProperty property) throws IOException, InterruptedException {
