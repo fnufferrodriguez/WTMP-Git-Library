@@ -17,7 +17,7 @@ test {
 
 publishing {
     publications {
-        maven(MavenPublication) {
+        mavenJava(MavenPublication) {
             artifactId = "usbr-git-library"
             from components.java
         }
