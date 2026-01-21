@@ -1,0 +1,33 @@
+plugins {
+    id 'java-library'
+    id 'jacoco'
+}
+
+compileJava {
+//    options.release = 11
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+dependencies {
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.bundles.junit.api)
+
+    testRuntimeOnly(libs.bundles.junit.runtime)
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    into("META-INF/maven/$project.group/$project.name") {
+        from { tasks.named("generatePomFileForMavenJavaPublication") }
+        rename ".*", "pom.xml"
+    }
+}
