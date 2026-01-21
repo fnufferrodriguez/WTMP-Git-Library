@@ -1,0 +1,19 @@
+[versions]
+jdom1-version = "1.0"
+google-flogger = "0.5.1"
+
+junit-version = "5.14.2"
+
+[libraries]
+jdom1 = { module = "jdom:jdom", version.ref = "jdom1-version" }
+google-flogger-api = { module = "com.google.flogger:flogger", version.ref = "google-flogger" }
+google-flogger-system-backend = { module = "com.google.flogger:flogger-system-backend", version.ref = "google-flogger" }
+
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit-version" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
+junit-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+[bundles]
+junit-api = ["junit-jupiter-api"]
+junit-runtime = ["junit-launcher", "junit-jupiter-engine"]

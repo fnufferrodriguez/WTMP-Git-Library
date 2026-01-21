@@ -1,14 +1,15 @@
 plugins {
-    id "java-library"
-    id "maven-publish"
+    id 'wtmp.deps-conventions'
+    id 'wtmp.java-conventions'
+    id 'wtmp.publishing-conventions'
+    id 'wtmp.versioning-conventions'
 }
 
 dependencies {
-    implementation 'jdom:jdom:1.0'
-    implementation 'com.google.flogger:flogger:0.5.1!!'
+    implementation libs.jdom1
+    implementation libs.google.flogger.api
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    testImplementation 'com.google.flogger:flogger-system-backend:0.5.1'
+    testImplementation libs.google.flogger.system.backend
 }
 
 test {
@@ -24,7 +25,7 @@ publishing {
     }
 }
 
-compileJava {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+allprojects {
+    group = 'usbr.wat.plugins'
+    version = versionConventions.getConventionVersion()
 }
