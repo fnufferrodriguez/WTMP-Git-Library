@@ -27,7 +27,7 @@ jobs:
 
       - name: Build with Gradle wrapper command
         # this run will do the build with the wrapper already provided in the repository
-        run: ./gradlew.bat assemble
+        run: ./gradlew.bat assemble -Xlint:unchecked
 
       - name: Upload build artifacts (full build folder)
         # upload-artifact action hash for version 6.0.0
