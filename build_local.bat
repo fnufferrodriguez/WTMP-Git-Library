@@ -1,0 +1,1 @@
+./gradlew build --stack-trace
